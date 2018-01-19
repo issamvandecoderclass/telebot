@@ -2,22 +2,23 @@ const Telebot = require('telebot');
 
 const bot = new Telebot ({
     token: '424146264:AAHgwo4Nvf_DB9eZreJnSm9LePWelcXZxwM'
-
 });
+
+console.log("Verbinding gelukt");
 
 bot.on('/start', function (msg) {
   console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " is verbonden met mijn bot.");
   return bot.sendMessage(msg.from.id, "Hoi " + msg.from.first_name + ". Tof dat je de Issam Bot gebruikt. Dit is mijn eerste Telgram bot. Dit zijn de commands die je nu kan gebruiken: hoi, goedendag. Voor meer commando's typ /commando. Voor hulp type /help.");
 });
 
+bot.on(/([Jj]e bent gay)/, function (msg) {
+  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft gay gezegd");
+  return bot.sendMessage(msg.from.id, "Je vader is gay.");
+});
+
 bot.on(/^([hH]oi|[hH]allo|[gG]oedendag)/, function (msg) {
   console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft hoi gezegd");
   return bot.sendMessage(msg.from.id, "Hallo " + msg.from.first_name );
-});
-
-bot.on(/[wW]ie ben ik?/, function (msg) {
-  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " vraagt wie hijzelf is.");
-  return bot.sendMessage(msg.from.id, "Hallo, jij bent " + msg.from.first_name + " " + msg.from.last_name);
 });
 
 bot.on(/[hH]oe gaat het/, function (msg) {
@@ -91,56 +92,30 @@ bot.on("document", (msg) => {
 });
 
 bot.on("photo", (msg) => {
-  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft een document gestuurd.");
+  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft een foto gestuurd.");
   return bot.sendMessage(msg.from.id, "Ha! Grappige foto.");
 });
 
-bot.on(/^\/postcode (.+)/, (msg, props) => {
-  let goed = {replyToMessage: msg.message_id};
-  let foute = {replyToMessage: msg.message_id};
-  const postcode = props.match[1];
+bot.on(/postcode [0-9][0-9][0-9][0-9][A-Za-z][A-Za-z]/, (msg, props) => {
+    console.log("Postcode");
+    let reageer = {replyToMessage: msg.message_id};
+    const postcode = props.match[1];
 
-  let correct = "Deze postcode is correct " + msg.from.first_name;
-  let fout = "Deze postcode is niet correct " + msg.from.first_name;
+    let correct = "Bedank van het doorgeven van een goede postcode " + msg.from.first_name + ".";
 
-
-  var postcode_gebruiker = {
-    n1: postcode[0],
-    n2: postcode[1],
-    n3: postcode[2],
-    n4: postcode[3],
-    n5: postcode[4],
-    n6: postcode[5]
-  };
-
-
-    var check = {
-      n1: isNaN(postcode_gebruiker.n1),
-      n2: isNaN(postcode_gebruiker.n2),
-      n3: isNaN(postcode_gebruiker.n3),
-      n4: isNaN(postcode_gebruiker.n4),
-      n5: isNaN(postcode_gebruiker.n5),
-      n6: isNaN(postcode_gebruiker.n6)
-    };
-
-if (postcode.length == 6) {
-  if (check.n1 == false && check.n2 == false && check.n3 == false && check.n4 == false && check.n5 == true && check.n6 == true){
-    return bot.sendMessage(msg.from.id,correct,goed);
-    console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft een goede postcode gegeven.");
-  }
-
-} else if (postcode.length != 6) {
-  return bot.sendMessage(msg.from.id,fout,foute);
-  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft een foute postcode gegeven.");
-};
+    return bot.sendMessage(msg.from.id,correct,reageer);
 });
+
+bot.on(/postcode .+/, (msg, props) => {
+  let reageer = {replyToMessage: msg.message_id};
+
+  return bot.sendMessage(msg.from.id,"De opgegeven postcode is niet geldig.", reageer);
+});
+
 
 bot.on(/(.+)/, function (msg, props) {
   var text = props.match[1];
   console.log(msg.from.first_name + " " + msg.from.last_name + ": " + text);
 });
-
-
-
 
 bot.start();
