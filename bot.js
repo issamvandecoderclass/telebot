@@ -11,9 +11,11 @@ bot.on('/start', function (msg) {
   return bot.sendMessage(msg.from.id, "Hoi " + msg.from.first_name + ". Tof dat je de Issam Bot gebruikt. Dit is mijn eerste Telgram bot. Dit zijn de commands die je nu kan gebruiken: hoi, goedendag. Voor meer commando's typ /commando. Voor hulp type /help.");
 });
 
-bot.on(/([Jj]e bent gay)/, function (msg) {
-  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft gay gezegd");
-  return bot.sendMessage(msg.from.id, "Je vader is gay.");
+bot.on('/versie', function (msg) {
+  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " vraagt om de versie.");
+  return bot.sendMessage(msg.from.id, "Dit is versie 1.3", {
+                replyToMessage: msg.message_id,
+              });
 });
 
 bot.on(/^([hH]oi|[hH]allo|[gG]oedendag)/, function (msg) {
@@ -81,11 +83,6 @@ bot.on('/over', function (msg) {
   return bot.sendMessage(msg.from.id, "Dit is de eerste versie van de Issam bot (/versie). Ik ben gemaakt door Issam Van de CoderClass. Mijn beste vriend is @bilal_assistent_bot. Dit heb ik gedaan met de module: Bots-programmeren. ");
 });
 
-bot.on('/versie', function (msg) {
-  console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft versie gezegd");
-  return bot.sendMessage(msg.from.id, "Dit is versie 1.1.3. Ik ben nog bezig met een beta update. Beoordeel dit alsjeblieft bij mij (niet de bot ;)");
-});
-
 bot.on("document", (msg) => {
   console.log(msg.from.first_name + " " + msg.from.last_name + " met id: " + msg.from.id + " heeft een document gestuurd.");
   return bot.sendMessage(msg.from.id, "Dank je voor het document!");
@@ -96,7 +93,7 @@ bot.on("photo", (msg) => {
   return bot.sendMessage(msg.from.id, "Ha! Grappige foto.");
 });
 
-bot.on(/postcode [0-9][0-9][0-9][0-9][A-Za-z][A-Za-z]/, (msg, props) => {
+bot.on(/postcode [0-9]{4}[A-Za-z]{2}/, (msg, props) => {
     console.log("Postcode");
     let reageer = {replyToMessage: msg.message_id};
     const postcode = props.match[1];
@@ -105,13 +102,6 @@ bot.on(/postcode [0-9][0-9][0-9][0-9][A-Za-z][A-Za-z]/, (msg, props) => {
 
     return bot.sendMessage(msg.from.id,correct,reageer);
 });
-
-bot.on(/postcode .+/, (msg, props) => {
-  let reageer = {replyToMessage: msg.message_id};
-
-  return bot.sendMessage(msg.from.id,"De opgegeven postcode is niet geldig.", reageer);
-});
-
 
 bot.on(/(.+)/, function (msg, props) {
   var text = props.match[1];
